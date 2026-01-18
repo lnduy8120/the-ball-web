@@ -1,0 +1,21 @@
+{
+  "/(primary)/history/page": "app/(primary)/history/page.js",
+  "/(primary)/matches/page": "app/(primary)/matches/page.js",
+  "/(primary)/news/[slug]/page": "app/(primary)/news/[slug]/page.js",
+  "/(primary)/news/page": "app/(primary)/news/page.js",
+  "/(primary)/notifications/page": "app/(primary)/notifications/page.js",
+  "/(primary)/prediction/page": "app/(primary)/prediction/page.js",
+  "/(primary)/profile/page": "app/(primary)/profile/page.js",
+  "/(primary)/standings/page": "app/(primary)/standings/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/account-settings/page": "app/account-settings/page.js",
+  "/add-bet/page": "app/add-bet/page.js",
+  "/help-center/page": "app/help-center/page.js",
+  "/login/page": "app/login/page.js",
+  "/match/[id]/page": "app/match/[id]/page.js",
+  "/page": "app/page.js",
+  "/register/page": "app/register/page.js",
+  "/team-detail/page": "app/team-detail/page.js",
+  "/terms-policy/page": "app/terms-policy/page.js"
+}

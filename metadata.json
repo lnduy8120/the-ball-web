@@ -1,0 +1,5 @@
+{
+  "name": "The ball Web",
+  "description": "A comprehensive football application featuring live scores, match statistics, AI-powered predictions, betting history tracking, and detailed team analytics.",
+  "requestFramePermissions": []
+}

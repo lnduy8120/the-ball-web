@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(primary)/layout,_N_T_/(primary)/prediction/layout,_N_T_/(primary)/prediction/page,_N_T_/prediction"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KHByaW1hcnkp/prediction/__PAGE__",
+    "/!KHByaW1hcnkp/prediction",
+    "/!KHByaW1hcnkp",
+    "/_index",
+    "/_head"
+  ]
+}

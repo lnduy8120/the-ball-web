@@ -1,0 +1,8 @@
+{
+  "/(primary)/matches/page": "app/(primary)/matches/page.js",
+  "/(primary)/news/page": "app/(primary)/news/page.js",
+  "/(primary)/profile/page": "app/(primary)/profile/page.js",
+  "/login/page": "app/login/page.js",
+  "/match/[id]/page": "app/match/[id]/page.js",
+  "/page": "app/page.js"
+}
