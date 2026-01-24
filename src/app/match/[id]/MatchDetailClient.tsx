@@ -64,7 +64,7 @@ export default function MatchDetailClient({ initialData }: MatchDetailClientProp
    }
 
    return (
-      <div className="min-h-screen bg-slate-100 font-sans pb-10 landscape:pl-20">
+      <div className="min-h-screen bg-slate-100 font-sans pb-10 landscape:pl-16">
          {/* Match Banner (Hero Section) */}
          <MatchHero match={match} />
 

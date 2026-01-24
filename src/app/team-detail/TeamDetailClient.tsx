@@ -65,7 +65,7 @@ export default function TeamDetailClient({ initialData }: TeamDetailClientProps)
     }
 
     return (
-        <div className="bg-background min-h-screen pb-24 font-sans landscape:pl-20">
+        <div className="bg-background min-h-screen pb-24 font-sans landscape:pl-16">
             {/* Team Hero with Clean Header */}
             {/* <div className="sticky top-0 z-50 bg-card p-4 border-b border-slate-200">
                 <div className="container mx-auto max-w-7xl flex items-center justify-center">
