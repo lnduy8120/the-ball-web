@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { matchService } from '../services/matchService';
 
-export const useMatchDetail = () => {
+export const useMatchDetail = (initialData?: any) => {
   const params = useParams();
   const id = params?.id as string;
   const [activeTab, setActiveTab] = useState('Thống kê');
@@ -12,7 +12,8 @@ export const useMatchDetail = () => {
     queryKey: ['match', id],
     queryFn: () => matchService.getMatchDetail(id!),
     enabled: !!id, // Only run if ID exists
-    staleTime: 1000 * 30, // 30 seconds (match details might change if live)
+    staleTime: 1000 * 30, // 30 seconds
+    initialData: initialData,
     refetchInterval: (query) => {
       // Poll every 30 seconds if match is live
       const data = query.state.data as any;

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import MatchesClient from './MatchesClient';
+import { serverMatchService } from '@/services/server/matchService';
 
 export const metadata: Metadata = {
   title: 'Lịch thi đấu & Tỷ số Trực tiếp | Football Companion',
@@ -11,6 +12,8 @@ export const metadata: Metadata = {
   }
 };
 
-export default function MatchesPage() {
-  return <MatchesClient />;
+export default async function MatchesPage() {
+  const initialMatches = await serverMatchService.getMatches();
+
+  return <MatchesClient initialMatches={initialMatches} />;
 }

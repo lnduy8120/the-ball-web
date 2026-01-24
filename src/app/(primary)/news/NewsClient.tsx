@@ -5,12 +5,18 @@ import NewsCard, { NewsArticle } from '../../../components/news/NewsCard';
 import { newsService } from '@/services/newsService';
 import Skeleton from '../../../components/ui/Skeleton';
 
-export default function NewsClient() {
+interface NewsClientProps {
+    initialNews?: NewsArticle[];
+}
+
+export default function NewsClient({ initialNews = [] }: NewsClientProps) {
     const [activeCategory, setActiveCategory] = useState<string>('All');
-    const [news, setNews] = useState<NewsArticle[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [news, setNews] = useState<NewsArticle[]>(initialNews);
+    const [loading, setLoading] = useState(initialNews.length === 0);
 
     useEffect(() => {
+        if (initialNews.length > 0) return;
+
         const fetchNews = async () => {
             try {
                 setLoading(true);
@@ -24,7 +30,7 @@ export default function NewsClient() {
         };
 
         fetchNews();
-    }, []);
+    }, [initialNews.length]);
 
     const categories = ['All', 'Match Analysis', 'Transfer News', 'Tournament Update', 'Player Focus'];
 
@@ -65,8 +71,8 @@ export default function NewsClient() {
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
                                     className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${activeCategory === cat
-                                            ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/20'
-                                            : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700'
+                                        ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/20'
+                                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700'
                                         }`}
                                 >
                                     {cat === 'All' ? 'Tất cả' : cat}

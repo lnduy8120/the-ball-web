@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { teamService } from '../services/teamService';
 
-export const useTeam = () => {
+export const useTeam = (initialData?: any) => {
   const [activeTab, setActiveTab] = useState('Tổng quan');
 
   const { data: teamData, isLoading: loading } = useQuery({
     queryKey: ['team', 'mcy'],
     queryFn: () => teamService.getTeamDetail('mcy'),
     staleTime: 1000 * 60 * 10, // 10 minutes
+    initialData: initialData,
   });
 
   const tabs = ['Tổng quan', 'Trận đấu', 'Đội hình', 'Thống kê'];

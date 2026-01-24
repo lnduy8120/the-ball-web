@@ -1,84 +1,72 @@
+
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { UserProfile } from '@/types';
-import { useToast } from './ToastContext';
-import { authService } from '../services/authService';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: UserProfile | null;
-  login: () => Promise<void>;
+  login: (returnUrl?: string) => Promise<void>;
   logout: () => void;
+  token?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { data: session, status } = useSession();
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const { showToast } = useToast();
 
-  const logout = useCallback(async () => {
-    try {
-      await authService.logout();
-    } catch (error) {
-      console.error("Logout error", error);
-    } finally {
+  useEffect(() => {
+    if (session?.user) {
+      // Map session user to UserProfile
+      const mappedUser: UserProfile = {
+        id: session.user.id || '',
+        name: session.user.name || 'User',
+        email: session.user.email || '',
+        avatar: session.user.image || '',
+        role: 'user', // Default to user
+      };
+
+      setUser(mappedUser);
+
+      // Sync token to localStorage for legacy API interceptor
+      if (session.accessToken) {
+        localStorage.setItem('access_token', session.accessToken);
+      }
+    } else {
       setUser(null);
-      window.location.href = '/';
+      localStorage.removeItem('access_token');
     }
-  }, []);
+  }, [session]);
 
-  const login = async () => {
+  const login = async (returnUrl?: string) => {
     try {
-      setIsLoading(true);
-      const data = await authService.login();
-
-      // Store tokens in LocalStorage
-      localStorage.setItem('access_token', data.accessToken);
-      localStorage.setItem('refresh_token', data.refreshToken);
-
-      setUser(data.user);
-      showToast('Đăng nhập thành công!', 'success');
+      await signIn('keycloak', { callbackUrl: returnUrl || '/' });
     } catch (error) {
       console.error("Login failed", error);
-      showToast('Đăng nhập thất bại. Vui lòng thử lại.', 'error');
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    const initAuth = async () => {
-      const accessToken = localStorage.getItem('access_token');
-
-      if (accessToken) {
-        try {
-          console.log("[Auth] Restoring session...");
-          const userData = await authService.getProfile();
-          setUser(userData);
-        } catch (error) {
-          console.error("Session restoration failed", error);
-          // Token might be invalid
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-        }
-      }
-      setIsLoading(false);
-    };
-
-    initAuth();
-  }, []);
+  const logout = async () => {
+    try {
+      await signOut({ callbackUrl: '/' });
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
 
   return (
     <AuthContext.Provider value={{
-      isAuthenticated: !!user,
-      isLoading,
+      isAuthenticated: status === 'authenticated',
+      isLoading: status === 'loading',
       user,
       login,
-      logout
+      logout,
+      token: session?.accessToken
     }}>
       {children}
     </AuthContext.Provider>

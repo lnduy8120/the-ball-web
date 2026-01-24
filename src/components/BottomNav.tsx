@@ -4,12 +4,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useNotifications } from '../hooks/useNotifications';
 import { useNavItems } from '../hooks/useNavItems';
+import { useAuth } from '../context/AuthContext';
 
 const BottomNav: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { unreadCount } = useNotifications();
   const { visibleNavItems } = useNavItems();
+  const { user } = useAuth();
   const [showMore, setShowMore] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -38,15 +40,27 @@ const BottomNav: React.FC = () => {
     <button
       key={item.path}
       onClick={() => {
-        router.push(item.path);
+        if (item.path === '/login') {
+          router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+        } else {
+          router.push(item.path);
+        }
         if (isMenu) setShowMore(false);
       }}
       className={`group relative flex ${isMenu ? 'w-full px-4 py-3 gap-3 hover:bg-slate-50' : 'flex-col items-center justify-center p-2'} transition-all ${isActive(item.path) ? 'text-primary' : 'text-slate-400 hover:text-slate-600'}`}
     >
       <div className={`relative transition-all duration-300 ${!isMenu && isActive(item.path) ? '-translate-y-1' : ''} ${!isMenu ? 'group-hover:-translate-y-1' : ''}`}>
-        <span className={`material-symbols-outlined ${isMenu ? 'text-xl' : 'text-2xl'} transition-transform ${!isMenu && isActive(item.path) ? 'icon-filled scale-110' : ''}`}>
-          {item.icon}
-        </span>
+        {item.path === '/profile' && user?.avatar ? (
+          <img
+            src={user.avatar}
+            alt={user.name}
+            className={`rounded-full object-cover border transition-all ${isMenu ? 'w-6 h-6' : 'w-7 h-7'} ${isActive(item.path) ? 'border-primary' : 'border-transparent'}`}
+          />
+        ) : (
+          <span className={`material-symbols-outlined ${isMenu ? 'text-xl' : 'text-2xl'} transition-transform ${!isMenu && isActive(item.path) ? 'icon-filled scale-110' : ''}`}>
+            {item.icon}
+          </span>
+        )}
         {item.showBadge && unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-3.5 min-w-[14px] px-1 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white border-2 border-white">
             {unreadCount > 9 ? '9+' : unreadCount}

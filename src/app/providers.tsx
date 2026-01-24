@@ -5,8 +5,8 @@ import { AuthProvider } from '../context/AuthContext';
 import { ToastProvider } from '../context/ToastContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@/lib/i18n';
+import { SessionProvider } from 'next-auth/react';
 
-// Create a client
 // Create a client
 const makeQueryClient = () => new QueryClient({
   defaultOptions: {
@@ -23,11 +23,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-      </ToastProvider>
+      <SessionProvider>
+        <ToastProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ToastProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }

@@ -7,9 +7,23 @@ import { useStandings } from '../../../hooks/useStandings';
 import { StandingRow } from '../../../types';
 import Skeleton from '../../../components/ui/Skeleton';
 
-export default function StandingsClient() {
+
+const LEAGUES = [
+  { id: 'PL', name: 'Premier League', logo: 'https://media.api-sports.io/football/leagues/39.png' },
+  { id: 'LL', name: 'La Liga', logo: 'https://media.api-sports.io/football/leagues/140.png' },
+  { id: 'SA', name: 'Serie A', logo: 'https://media.api-sports.io/football/leagues/135.png' },
+  { id: 'BL', name: 'Bundesliga', logo: 'https://media.api-sports.io/football/leagues/78.png' },
+  { id: 'VL', name: 'V-League', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/66/V.League_1_logo_%282024%29.svg' },
+];
+
+interface StandingsClientProps {
+  initialStandings?: StandingRow[];
+}
+
+export default function StandingsClient({ initialStandings }: StandingsClientProps) {
   const router = useRouter();
-  const { filter, setFilter, displayData, loading } = useStandings();
+  const [selectedLeague, setSelectedLeague] = React.useState(LEAGUES[0]);
+  const { filter, setFilter, displayData, loading } = useStandings(selectedLeague.id, initialStandings);
 
   const columns: Column<StandingRow>[] = [
     {
@@ -87,22 +101,38 @@ export default function StandingsClient() {
                 <h1 className="text-xl font-bold tracking-tight text-slate-900">Bảng xếp hạng</h1>
             </div> */}
 
-          {/* League Selector */}
-          <div className="pb-3">
-            <div className="relative w-full max-w-md">
-              <select className="appearance-none w-full bg-slate-50 dark:bg-gray-800 text-[#111418] dark:text-white border-none rounded-2xl py-3 pl-12 pr-10 text-lg font-semibold cursor-pointer focus:ring-2 focus:ring-primary/20">
-                <option>Premier League</option>
-                <option>La Liga</option>
-                <option>Serie A</option>
-                <option>Bundesliga</option>
-                <option>V-League</option>
-              </select>
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
-                <div className="w-6 h-6 rounded-full bg-gray-200 bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuASl46Hj6T1DM7EqHg4eYypaMSKa4mCdEpB8mgJt_zvd6j9XuzkWXqfCdHVMZzDaJ1snconVzIdQGgd27l8w3X0odCscElH4yl61tPnFv6uFsRIcIkPDfIQepbBzJWmTQ1htkv_x6moW_1G_dFtWXkweEES6t1ZpHcxKjvRqkeWOjpgQOTvLC3Y1Bhvo2LpvDV_rvx6gyhe4mYmY0jZTW8HDN4_DkN5nGqVsxT4VFs6mMKUblhvNVL1wMkwawGqB2UFxDchKXQxyLmN')" }}></div>
-              </div>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                <span className="material-symbols-outlined">expand_more</span>
-              </div>
+
+          {/* League List */}
+          <div className="pb-6">
+            <div
+              className="flex items-center gap-3 overflow-x-auto pb-2 -mx-4 px-4 select-none [&::-webkit-scrollbar]:hidden"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {LEAGUES.map((league) => {
+                const isActive = selectedLeague.id === league.id;
+                return (
+                  <button
+                    key={league.id}
+                    onClick={() => setSelectedLeague(league)}
+                    className={`flex-shrink-0 flex items-center gap-3 pl-2 pr-5 py-2 rounded-full transition-all duration-300 border
+                      ${isActive
+                        ? 'bg-white dark:bg-[#1A2633] border-gray-100 dark:border-gray-700 shadow-md scale-100'
+                        : 'bg-transparent border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50 opacity-70 hover:opacity-100'
+                      }`}
+                  >
+                    <div className={`w-10 h-10 p-1.5 rounded-full bg-slate-50 dark:bg-gray-800 flex items-center justify-center transition-all ${!isActive ? 'grayscale' : ''}`}>
+                      <img
+                        src={league.logo}
+                        alt={league.name}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <span className={`font-bold whitespace-nowrap ${isActive ? 'text-[#111418] dark:text-white text-lg' : 'text-gray-500 text-base'}`}>
+                      {league.name}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -114,8 +144,8 @@ export default function StandingsClient() {
                   key={f}
                   onClick={() => setFilter(f)}
                   className={`flex-1 rounded-full text-xs font-bold uppercase tracking-wide h-full transition-all ${filter === f
-                      ? 'bg-white dark:bg-[#1A2633] shadow-sm text-primary'
-                      : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                    ? 'bg-white dark:bg-[#1A2633] shadow-sm text-primary'
+                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                     }`}
                 >
                   {f === 'overall' ? 'Tổng quan' : f === 'home' ? 'Sân nhà' : 'Sân khách'}

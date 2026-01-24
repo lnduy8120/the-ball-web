@@ -1,24 +1,26 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/ui/Button';
 import Spinner from '../../components/ui/Spinner';
 
-export default function LoginScreen() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/matches';
   const { isAuthenticated, isLoading, login } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      router.push('/matches');
+      router.push(callbackUrl);
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, callbackUrl]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    login();
+    login(callbackUrl);
   };
 
   if (isLoading) {
@@ -76,14 +78,14 @@ export default function LoginScreen() {
               <Button
                 type="button"
                 variant="white"
-                onClick={() => login()}
+                onClick={() => login(callbackUrl)}
               >
                 Google
               </Button>
               <Button
                 type="button"
                 variant="white"
-                onClick={() => login()}
+                onClick={() => login(callbackUrl)}
               >
                 Apple
               </Button>
@@ -111,5 +113,17 @@ export default function LoginScreen() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function LoginScreen() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Spinner size="lg" variant="primary" />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

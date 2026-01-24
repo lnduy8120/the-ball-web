@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Match } from '@/types';
 import { matchService } from '../services/matchService';
 
-export const useMatches = () => {
+export const useMatches = (initialMatches?: Match[]) => {
   const [activeFilter, setActiveFilter] = useState('Tất cả');
 
   const { data: matches = [], isLoading, isError, refetch } = useQuery({
@@ -11,6 +11,7 @@ export const useMatches = () => {
     queryFn: () => matchService.getMatches(),
     staleTime: 1000 * 60, // 1 minute fresh
     refetchOnWindowFocus: true, // Auto refetch when app comes to foreground
+    initialData: initialMatches, // Hydrate from server
     select: (data) => {
       // Transformation: we could do basic sorting here if needed
       return data;

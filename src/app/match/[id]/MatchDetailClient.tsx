@@ -11,9 +11,13 @@ import BottomNav from '../../../components/BottomNav';
 import { useMatchDetail } from '../../../hooks/useMatchDetail';
 import Skeleton from '../../../components/ui/Skeleton';
 
-export default function MatchDetailClient() {
+interface MatchDetailClientProps {
+   initialData?: any;
+}
+
+export default function MatchDetailClient({ initialData }: MatchDetailClientProps) {
    const router = useRouter();
-   const { match, activeTab, setActiveTab, tabs, loading } = useMatchDetail();
+   const { match, activeTab, setActiveTab, tabs, loading } = useMatchDetail(initialData);
 
    if (loading) {
       return (

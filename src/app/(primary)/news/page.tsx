@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import NewsClient from './NewsClient';
+import { serverNewsService } from '@/services/server/newsService';
 
 export const metadata: Metadata = {
     title: 'Nhận định Bóng đá & Tin tức Thể thao | Football Companion',
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
     }
 };
 
-export default function NewsPage() {
-    return <NewsClient />;
+export default async function NewsPage() {
+    const initialNews = await serverNewsService.getAllNews();
+
+    return <NewsClient initialNews={initialNews} />;
 }

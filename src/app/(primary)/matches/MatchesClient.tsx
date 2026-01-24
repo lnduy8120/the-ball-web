@@ -4,16 +4,20 @@ import React from 'react';
 import MatchCard from '../../../components/matches/MatchCard';
 import { useMatches } from '../../../hooks/useMatches';
 import Skeleton from '../../../components/ui/Skeleton';
-import { Match } from '../../../types';
+import { Match } from '@/types';
 
-export default function MatchesClient() {
+interface MatchesClientProps {
+   initialMatches?: Match[];
+}
+
+export default function MatchesClient({ initialMatches }: MatchesClientProps) {
    const {
       activeFilter,
       setActiveFilter,
       filters,
       getFilteredMatches,
       loading
-   } = useMatches();
+   } = useMatches(initialMatches);
 
    const filteredMatches = getFilteredMatches();
 

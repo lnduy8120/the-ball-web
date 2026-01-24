@@ -12,7 +12,7 @@ export default function MainLayout({
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <div className="w-full min-h-screen relative">
-        <div className="h-full w-full pb-20 md:pb-24 landscape:pl-20 landscape:pb-0">
+        <div className="h-full w-full pb-20 md:pb-24 landscape:pl-16 landscape:pb-0">
           {children}
         </div>
         <SideNav />

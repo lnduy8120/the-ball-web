@@ -4,12 +4,14 @@ import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useNotifications } from '../hooks/useNotifications';
 import { useNavItems } from '../hooks/useNavItems';
+import { useAuth } from '../context/AuthContext';
 
 const SideNav: React.FC = () => {
     const router = useRouter();
     const pathname = usePathname();
     const { unreadCount } = useNotifications();
     const { visibleNavItems } = useNavItems();
+    const { user } = useAuth();
 
     const isActive = (path: string) => {
         if (path === '/matches' && pathname.includes('/match/')) return true;
@@ -22,14 +24,28 @@ const SideNav: React.FC = () => {
     const renderItem = (item: any) => (
         <button
             key={item.path}
-            onClick={() => router.push(item.path)}
+            onClick={() => {
+                if (item.path === '/login') {
+                    router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+                } else {
+                    router.push(item.path);
+                }
+            }}
             className={`group relative flex items-center justify-start px-3 gap-4 w-full py-2 transition-all ${isActive(item.path) ? 'text-primary' : 'text-slate-400 hover:text-slate-600'
                 }`}
         >
             <div className={`relative p-2 rounded-xl transition-all duration-300 ${isActive(item.path) ? 'bg-primary/5' : 'group-hover:bg-slate-50'}`}>
-                <span className={`material-symbols-outlined text-2xl transition-transform ${isActive(item.path) ? 'icon-filled scale-110' : ''}`}>
-                    {item.icon}
-                </span>
+                {item.path === '/profile' && user?.avatar ? (
+                    <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className={`w-6 h-6 rounded-full object-cover border ${isActive(item.path) ? 'border-primary' : 'border-transparent'}`}
+                    />
+                ) : (
+                    <span className={`material-symbols-outlined text-2xl transition-transform ${isActive(item.path) ? 'icon-filled scale-110' : ''}`}>
+                        {item.icon}
+                    </span>
+                )}
                 {item.showBadge && unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 flex h-3.5 min-w-[14px] px-1 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white border-2 border-white">
                         {unreadCount > 9 ? '9+' : unreadCount}

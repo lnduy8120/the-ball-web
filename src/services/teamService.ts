@@ -1,25 +1,65 @@
 import api from './api';
 import { StandingRow } from '@/types';
 
-const MOCK_STANDINGS: StandingRow[] = [
-  { rank: 1, team: 'Man City', played: 30, record: '25-3-2', gd: '+45', points: 78, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCe3zSKtvnFalzaJvcATfFTTsK7wJMYO0bDfGUfGRyGfcSI0MwSDEQpQWWzpH8MzRTAQqu9DPUny_Pi4QX8rDwtFQbNHvCWAnA5u5p8Co-rwge_ReBMPWkM4qEX0JSMXolVRNOOZzxigHbe26pEmqima0PpD6osgv4n0gNv50KtD31IpOBYdmSbf-_k2E2c8UrbPU0Er6XfhXKN9K7j_bJtHWMWf9iF51WUfyhGszdiGPYPa4B2v0h2IXFfUHHmG7ndOrieGB91Zl_x', status: 'ucl' },
-  { rank: 2, team: 'Arsenal', played: 30, record: '24-4-2', gd: '+40', points: 76, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyRWmzKrRjAhOPHKdL_6gSRKNBmBlu89RaI1xr0uoR1gsfW1Xb88YculM1NLMhsO3GQrdjuyd940lAW1i2wwyvZ3wkwqQkMJK6KI7VpmhaiDW-fHUnaHzExUc7wztlGZzTxYFZAW6eN8RcddFkjDY03hV08JdL6CKNtUq8lJlW6_EKwlgIo_K8XuTz7YleigwNX0zfxvwjLT3az13qZ9c_sZJbCixxG7XCtExdUZIhSTAHeibUKlbwH1YqO33yX-jwXpxdE-dbZM3P', status: 'ucl' },
-  { rank: 3, team: 'Liverpool', played: 30, record: '22-6-2', gd: '+38', points: 72, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuANsQFE7hZItvaH5J7vwE01aJukdVhUk5Rsbo8LnCF6igL8ND6ME296RJn-_fllAyFqCUUInogXZSsv0CCBJiJmKLxiQwBc7YRtyIXRudy9hOwLjKQQtaAiKILY_oUf9xpUwTSqXXwgtJiqD2et0Q-ssqfMEduuEJT2owwuy3RXVKLyQ7j-X-dWhrkC3Xjy9vkz7a4ENcTr7vHeaIHhx5l-6NfB51Ss_a1XZPDF-ll9_s1a4a-lA3SUAV1IDhFNQ4ovvm-GWbUZwQpW', status: 'ucl' },
-  { rank: 4, team: 'Aston Villa', played: 30, record: '18-5-7', gd: '+15', points: 59, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBuUhZqP1IzzlevWgLOjRAyUxHxD8MZSWEQ4_GAOCHW1ucvPqQzWHo2OLr733tUB2cmAIEUUpTxodt5hKis9y49PeVvDIdjvnfSBYdn_2T4zFpmvU-Wi9MRy8KpTcN7U4-ZVtnhFplFvDBhB5bM1e0xPHM8cUC-FRWnSLUfz9oNmcwSJpWuqRQEJcDC9Ieee39Dw03uyK_URhBEGaCHFPE7KNgG0JDceW6BLn4lOs6nBvwcdlX8kD9ccLUx2oqkSYZoJDPbHu5A1tQp', status: 'ucl' },
-  { rank: 5, team: 'West Ham', played: 30, record: '13-9-8', gd: '-4', points: 48, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6aUXb0fqRbBvbbTjvfk_Mx2M2Y3gSdZncgFkbsYyMcpb2l1H7ik1i_OlersIa-C-6-c5LP0T0kzcnoyRAmQqdO24DQOAYlcnhY52p6bONIwQk4nd6O5tBiSgXqf7HOi10Rrm5V3E9ZQrGn1c_ouT-Yp_EgxLFDQPCpIuSmtCRVa4u3oevki5kK_ZnrpUps_vtxPRpoUq8-t9P39siReqqHdV44_SyAdNATzxvIWAsgxbLVVSlp9rYJ6-MwVN_FtMYhYUex9zS9B2s', status: 'uel' },
-  { rank: 6, team: 'Man Utd', played: 29, record: '15-3-11', gd: '0', points: 48, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBhk15SeyndGvKgS9Al9k9pQHogbxGPADpV8alc3wA2L7_RSpZwhNax_IQhmkWC6tw3o4yyA4j4c0-fqZqujgOezjCLpnT16WNAUWg8bccXVejHFtBBIfREukbY5W1TnNe9M8RtqupABmCjJlzdy-ehcBYUSTNsaoyec5FP7PeCX04m_WI75JCCxduFRmsguAOqjul9Z0PlnEhyIufbVZgjTjwolvK4RT8XXIMr8ibvyHCqSU-RmvVMcv1t-Vx2F0IlvudHi14Bewbz', status: 'normal' },
-  { rank: 7, team: 'Tottenham', played: 29, record: '14-5-10', gd: '+8', points: 47, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA1-Kb_322Pbor8bHovmhqiNUph2H8ZVaOiEEd6j6hhY4eCGA1kyddGlmeOiY9aY4fysb0U_pgCZscKYS-oogabXWbuJLwkeNeUwP2siDwYdN1Jc9S59Uf5yezLWS_dYPDmdI0BKIxbFhdWEOggn-UF2--bX-xGuMbCAbcINq62umjhoN_J1WUHNdxHu5-wbaX_8lR64dxoEazt_aSsJIxacdJWzYPiJ5WmgxfDlXgc6HWob6eK6bMsdFh58r98MGPwGhxncE_SyOah', status: 'normal' },
-  { rank: 8, team: 'Brighton', played: 30, record: '11-9-10', gd: '+2', points: 42, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBADTAQ43jNndc-3a6XUAEf8urakRV7x1H5wc7saQx_SnKotKJZ6GjIbMwl5koqhK3FUYkNU-guToBKPO2IPAbTrciiJG5n0GbfckjTpUA2PO1CGHCrc2wYBDUmEKWnWKAhYpaS-J6k-QggQOJziSmOLKiYV4UsZGRl53qD8snJ4AxQUBOw9ZFr5qkkTPYs0BW0oHgKgcVy6E5--orIXMxAmyzZ8CpdQUERWgxC8b4EYTQman9YGjmL2Ty_r_-vtwSME0UhvJQa6tC0', status: 'normal' },
-  { rank: 18, team: 'Luton', played: 30, record: '5-7-18', gd: '-19', points: 22, logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBfOHdhVOOBx3E0j6JE39vCPjgc5Ybm-RZA2d0Bm2pt0_IUbEWACD23GTGBYXLliKyZRoyMqWDKKb2NHllyz1vS_O4EeOAYaV9UCwH5H0CQT1Bc0gZNgcYS6hvrcqJZqdReCSLO1JT82q5GiLt7Kqj9Xm_hNUDFognkod8jEcVmFhP1qfRbENB-M6-DL0mPJznd0nXczAUT54-8pX1q3i1z7F60QZ652EHYpcGhpbVH3-qv8qugiUqj-fVshQLsjsKNBEDoaYvy6ztw', status: 'relegation' },
+
+const MOCK_STANDINGS_PL: StandingRow[] = [
+  { rank: 1, team: 'Man City', played: 30, record: '25-3-2', gd: '+45', points: 78, logo: 'https://media.api-sports.io/football/teams/50.png', status: 'ucl' },
+  { rank: 2, team: 'Arsenal', played: 30, record: '24-4-2', gd: '+40', points: 76, logo: 'https://media.api-sports.io/football/teams/42.png', status: 'ucl' },
+  { rank: 3, team: 'Liverpool', played: 30, record: '22-6-2', gd: '+38', points: 72, logo: 'https://media.api-sports.io/football/teams/40.png', status: 'ucl' },
+  { rank: 4, team: 'Aston Villa', played: 30, record: '18-5-7', gd: '+15', points: 59, logo: 'https://media.api-sports.io/football/teams/66.png', status: 'ucl' },
+  { rank: 5, team: 'Tottenham', played: 29, record: '14-5-10', gd: '+8', points: 47, logo: 'https://media.api-sports.io/football/teams/47.png', status: 'uel' },
+  { rank: 6, team: 'Man Utd', played: 29, record: '15-3-11', gd: '0', points: 48, logo: 'https://media.api-sports.io/football/teams/33.png', status: 'uel' },
+  { rank: 7, team: 'West Ham', played: 30, record: '13-9-8', gd: '-4', points: 48, logo: 'https://media.api-sports.io/football/teams/48.png', status: 'normal' },
+  { rank: 8, team: 'Newcastle', played: 30, record: '11-9-10', gd: '+2', points: 42, logo: 'https://media.api-sports.io/football/teams/34.png', status: 'normal' },
+  { rank: 18, team: 'Luton', played: 30, record: '5-7-18', gd: '-19', points: 22, logo: 'https://media.api-sports.io/football/teams/1359.png', status: 'relegation' },
 ];
+
+const MOCK_STANDINGS_LL: StandingRow[] = [
+  { rank: 1, team: 'Real Madrid', played: 30, record: '23-6-1', gd: '+41', points: 75, logo: 'https://media.api-sports.io/football/teams/541.png', status: 'ucl' },
+  { rank: 2, team: 'Barcelona', played: 30, record: '20-7-3', gd: '+27', points: 67, logo: 'https://media.api-sports.io/football/teams/529.png', status: 'ucl' },
+  { rank: 3, team: 'Girona', played: 30, record: '20-5-5', gd: '+24', points: 65, logo: 'https://media.api-sports.io/football/teams/547.png', status: 'ucl' },
+  { rank: 4, team: 'Atlético Madrid', played: 30, record: '18-4-8', gd: '+20', points: 58, logo: 'https://media.api-sports.io/football/teams/530.png', status: 'ucl' },
+  { rank: 5, team: 'Athletic Club', played: 30, record: '16-8-6', gd: '+18', points: 56, logo: 'https://media.api-sports.io/football/teams/531.png', status: 'uel' },
+];
+
+const MOCK_STANDINGS_SA: StandingRow[] = [
+  { rank: 1, team: 'Inter Milan', played: 30, record: '25-4-1', gd: '+57', points: 79, logo: 'https://media.api-sports.io/football/teams/505.png', status: 'ucl' },
+  { rank: 2, team: 'AC Milan', played: 30, record: '20-5-5', gd: '+23', points: 65, logo: 'https://media.api-sports.io/football/teams/489.png', status: 'ucl' },
+  { rank: 3, team: 'Juventus', played: 30, record: '17-8-5', gd: '+20', points: 59, logo: 'https://media.api-sports.io/football/teams/496.png', status: 'ucl' },
+  { rank: 4, team: 'Bologna', played: 30, record: '16-9-5', gd: '+15', points: 57, logo: 'https://media.api-sports.io/football/teams/500.png', status: 'ucl' },
+];
+
+const MOCK_STANDINGS_BL: StandingRow[] = [
+  { rank: 1, team: 'Leverkusen', played: 30, record: '25-5-0', gd: '+50', points: 80, logo: 'https://media.api-sports.io/football/teams/168.png', status: 'ucl' },
+  { rank: 2, team: 'Bayern Munich', played: 30, record: '20-3-7', gd: '+45', points: 63, logo: 'https://media.api-sports.io/football/teams/157.png', status: 'ucl' },
+  { rank: 3, team: 'Stuttgart', played: 30, record: '19-3-8', gd: '+25', points: 60, logo: 'https://media.api-sports.io/football/teams/172.png', status: 'ucl' },
+  { rank: 4, team: 'Dortmund', played: 30, record: '16-8-6', gd: '+20', points: 56, logo: 'https://media.api-sports.io/football/teams/165.png', status: 'ucl' },
+];
+
+const MOCK_STANDINGS_VL: StandingRow[] = [
+  { rank: 1, team: 'Nam Định', played: 14, record: '10-2-2', gd: '+15', points: 32, logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Nam_Dinh_FC_Link_Logo.png', status: 'ucl' },
+  { rank: 2, team: 'Bình Dương', played: 14, record: '8-2-4', gd: '+5', points: 26, logo: 'https://upload.wikimedia.org/wikipedia/vi/a/a2/Logo_Becamex_Binh_Duong_2021.svg', status: 'ucl' },
+  { rank: 3, team: 'CAHN', played: 14, record: '7-4-3', gd: '+8', points: 25, logo: 'https://upload.wikimedia.org/wikipedia/vi/b/b3/Cong_An_Ha_Noi_FC.svg', status: 'ucl' },
+  { rank: 4, team: 'Thanh Hóa', played: 14, record: '6-4-4', gd: '+4', points: 22, logo: 'https://upload.wikimedia.org/wikipedia/vi/9/91/Logo_CLB_Thanh_H%C3%B3a_t%E1%BB%AB_2011.png', status: 'uel' },
+];
+
+const MOCK_DATA_MAP: Record<string, StandingRow[]> = {
+  'PL': MOCK_STANDINGS_PL,
+  'LL': MOCK_STANDINGS_LL,
+  'SA': MOCK_STANDINGS_SA,
+  'BL': MOCK_STANDINGS_BL,
+  'VL': MOCK_STANDINGS_VL,
+};
 
 export const teamService = {
   getStandings: async (league: string): Promise<StandingRow[]> => {
     // const response = await api.get('/leagues/standings', { params: { league }});
     // return response.data;
 
+    const data = MOCK_DATA_MAP[league] || MOCK_STANDINGS_PL;
+
     return new Promise((resolve) => {
-      setTimeout(() => resolve(MOCK_STANDINGS), 500);
+      setTimeout(() => resolve(data), 500);
     });
   },
 
