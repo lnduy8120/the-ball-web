@@ -21,6 +21,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      signOut({ callbackUrl: '/' });
+      return;
+    }
+
     if (session?.user) {
       // Map session user to UserProfile
       const mappedUser: UserProfile = {
@@ -32,14 +37,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
 
       setUser(mappedUser);
-
-      // Sync token to localStorage for legacy API interceptor
-      if (session.accessToken) {
-        localStorage.setItem('access_token', session.accessToken);
-      }
     } else {
       setUser(null);
-      localStorage.removeItem('access_token');
     }
   }, [session]);
 

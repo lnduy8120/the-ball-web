@@ -1,6 +1,8 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config } from '../config';
 
+import { getSession } from 'next-auth/react';
+
 const api = axios.create({
   baseURL: config.api.url,
   headers: {
@@ -11,8 +13,10 @@ const api = axios.create({
 
 // Request Interceptor: Attach Token
 api.interceptors.request.use(
-  (reqConfig: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('access_token');
+  async (reqConfig: InternalAxiosRequestConfig) => {
+    const session = await getSession();
+    const token = session?.accessToken;
+
     if (token && reqConfig.headers) {
       reqConfig.headers.Authorization = `Bearer ${token}`;
     }
